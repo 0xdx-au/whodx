@@ -24,12 +24,12 @@ echo "[3/7] Waiting 3 seconds for Xorg to start, then running 'xhost +'..."
 sleep 3
 xhost + || echo "WARNING: 'xhost +' failed."
 
-# 4) Start openbox as non-root user (background)
+# 4) Start Openbox as non-root user (background)
 echo "[4/7] Starting Openbox as 'appuser'..."
 sudo -u appuser DISPLAY=:1 HOME=/home/appuser openbox &
 OPENBOX_PID=$!
 
-# 5) Start x11vnc (no '-resize', but includes '-ncache' for smoother performance)
+# 5) Start x11vnc (without '-resize', but with '-ncache' for smoother performance)
 echo "[5/7] Starting x11vnc on port 5900..."
 x11vnc -display :1 -forever -shared -rfbport 5900 -nopw -listen 0.0.0.0 -ncache 10 &
 X11VNC_PID=$!
