@@ -29,9 +29,9 @@ echo "[4/7] Starting Openbox as 'appuser'..."
 sudo -u appuser DISPLAY=:1 HOME=/home/appuser openbox &
 OPENBOX_PID=$!
 
-# 5) Start x11vnc (without the unsupported -resize flag)
+# 5) Start x11vnc (no '-resize', but includes '-ncache' for smoother performance)
 echo "[5/7] Starting x11vnc on port 5900..."
-x11vnc -display :1 -forever -shared -rfbport 5900 -nopw -listen 0.0.0.0 &
+x11vnc -display :1 -forever -shared -rfbport 5900 -nopw -listen 0.0.0.0 -ncache 10 &
 X11VNC_PID=$!
 
 # 6) Start noVNC (wraps port 5900 to 8443 with SSL/TLS)
