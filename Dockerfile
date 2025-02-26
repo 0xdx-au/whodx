@@ -6,11 +6,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 #    - Xorg + dummy driver (with RandR) for a virtual display
 #    - x11-xserver-utils for xhost
 #    - sudo so we can run processes as a non-root user
-#    - x11vnc, novnc, websockify for remote desktop access
+#    - x11vnc, novnc, websockify for remote desktop
 #    - openbox for a lightweight window manager
 #    - tor, tor-geoipdb for Tor functionality
-#    - xz-utils to extract the Tor Browser tarball
-#    - Optional dialog tools to prevent Tor Browser warnings
+#    - xz-utils to extract Tor Browser
+#    - optional dialog tools to avoid Tor Browser warnings
 RUN apt-get update && apt-get install -y --no-install-recommends \
     xserver-xorg-core \
     xserver-xorg-video-dummy \
@@ -48,7 +48,7 @@ RUN chmod +x /opt/generate-cert.sh \
     && chmod +x /opt/tor-browser.install.sh \
     && chmod +x /usr/local/bin/entrypoint.sh
 
-# 5) Run certificate generation and install Tor Browser
+# 5) Generate self-signed cert and install Tor Browser
 RUN /opt/generate-cert.sh
 RUN /opt/tor-browser.install.sh
 
