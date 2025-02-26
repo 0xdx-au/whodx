@@ -34,7 +34,6 @@
 
     <!-- Placeholder for noVNC content -->
     <div id="noVNC_container">
-      <!-- noVNC's actual JavaScript and VNC canvas would be here -->
       <p style="text-align:center; margin-top:20px;">noVNC is loading...</p>
     </div>
 
@@ -52,7 +51,7 @@
                   setTimeout(updateTimer, 1000);
               } else {
                   timerBanner.innerText = "Session Ended";
-                  // Optionally add additional behavior here (e.g. disconnect VNC)
+                  // Optionally add more behavior (disconnect session, etc.)
               }
           }
           updateTimer();
