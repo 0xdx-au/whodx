@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>whodx noVNC</title>
+    <style>
+      /* Overlay timer style */
+      #overlay-timer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: red;
+        color: white;
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        padding: 10px 0;
+        z-index: 10000;
+      }
+      /* Basic style for the noVNC container */
+      #noVNC_container {
+        position: absolute;
+        top: 60px; /* leave space for timer */
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Red overlay timer -->
+    <div id="overlay-timer">Time Remaining: 30:00</div>
+
+    <!-- Placeholder for noVNC content -->
+    <div id="noVNC_container">
+      <!-- noVNC's actual JavaScript and VNC canvas would be here -->
+      <p style="text-align:center; margin-top:20px;">noVNC is loading...</p>
+    </div>
+
+    <script>
+      // Overlay timer countdown from 30:00 minutes
+      (function() {
+          const timerBanner = document.getElementById('overlay-timer');
+          let timeRemaining = 1800; // 30 minutes in seconds
+          function updateTimer() {
+              const minutes = Math.floor(timeRemaining / 60);
+              const seconds = timeRemaining % 60;
+              timerBanner.innerText = `Time Remaining: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+              if (timeRemaining > 0) {
+                  timeRemaining--;
+                  setTimeout(updateTimer, 1000);
+              } else {
+                  timerBanner.innerText = "Session Ended";
+                  // Optionally add additional behavior here (e.g. disconnect VNC)
+              }
+          }
+          updateTimer();
+      })();
+    </script>
+  </body>
+</html>
