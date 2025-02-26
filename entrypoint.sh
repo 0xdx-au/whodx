@@ -9,53 +9,54 @@ echo "Access URL: https://localhost:9491/vnc.html"
 echo "Session self-destructs in 30 minutes."
 echo "================================================="
 
-# 1) Start Tor in background
-echo "[1/6] Starting Tor..."
+# 1) Start Tor (background)
+echo "[1/7] Starting Tor..."
 tor -f /etc/tor/torrc &
 TOR_PID=$!
 
-# 2) Start Xorg dummy server
-echo "[2/6] Starting Xorg on :1..."
+# 2) Start the Xorg dummy server with RandR (background)
+echo "[2/7] Starting Xorg on :1..."
 Xorg :1 -config /etc/X11/xorg-dummy.conf -noreset -listen tcp +extension RANDR -logfile /var/log/Xorg.log &
 XORG_PID=$!
 
-# 3) Wait 3s, then run xhost + to disable X authentication
-echo "[3/6] Disabling X authentication with 'xhost +'..."
+# 3) Wait for Xorg to be ready, then disable X authentication with 'xhost +'
+echo "[3/7] Waiting 3 seconds for Xorg to start, then running 'xhost +'..."
 sleep 3
-xhost + || echo "WARNING: xhost + failed."
+xhost + || echo "WARNING: 'xhost +' failed."
 
-# 4) Start openbox as 'appuser'
-echo "[4/6] Starting Openbox as 'appuser'..."
+# 4) Start openbox as non-root user (background)
+echo "[4/7] Starting Openbox as 'appuser'..."
 sudo -u appuser DISPLAY=:1 HOME=/home/appuser openbox &
 OPENBOX_PID=$!
 
-# 5) Start x11vnc without '-resize' to avoid crash
-echo "[5/6] Starting x11vnc (no -resize) on port 5900..."
-x11vnc -display :1 -forever -shared -rfbport 5900 \
-       -nopw -listen 0.0.0.0 &
+# 5) Start x11vnc (without the unsupported -resize flag)
+echo "[5/7] Starting x11vnc on port 5900..."
+x11vnc -display :1 -forever -shared -rfbport 5900 -nopw -listen 0.0.0.0 &
 X11VNC_PID=$!
 
-# Start noVNC => wraps 127.0.0.1:5900 -> :8443
-echo "[5b/6] Starting noVNC on port 8443..."
+# 6) Start noVNC (wraps port 5900 to 8443 with SSL/TLS)
+echo "[6/7] Starting noVNC on port 8443..."
 websockify --web=/usr/share/novnc/ 0.0.0.0:8443 127.0.0.1:5900 \
   --cert=/opt/selfsigned.crt \
   --key=/opt/selfsigned.key \
   --ssl-only &
 NOVNC_PID=$!
 
-# 6) After 5s, launch Tor Browser as 'appuser'
-echo "[6/6] Launching Tor Browser in 5s..."
+# 7) After a short delay, launch Tor Browser as non-root
+echo "[7/7] Launching Tor Browser as 'appuser' in 5 seconds..."
 sleep 5
 sudo -u appuser bash -c "cd /opt/tor-browser && ./start-tor-browser.desktop --allow-remote" || true
 
 # Self-destruct after 30 minutes
 (
   sleep 1800
-  echo "Time's up! Self-destructing..."
+  echo "Time's up! Self-destructing container..."
   kill -TERM 1
 ) &
 
-# Wait on background processes to keep container alive
+# Wait on background processes so the container remains alive
 wait $TOR_PID || echo "Tor exited with code $?"
 wait $XORG_PID || echo "Xorg exited with code $?"
-wait
+wait $OPENBOX_PID || echo "Openbox exited with code $?"
+wait $X11VNC_PID || echo "x11vnc exited with code $?"
+wait $NOVNC_PID || echo "noVNC exited with code $?"
