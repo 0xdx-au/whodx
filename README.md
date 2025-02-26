@@ -65,18 +65,16 @@ whodx/
    - Accept the self-signed certificate  
    - After ~5–10 seconds, you should see **Tor Browser** within the noVNC interface.  
    - The container will self-terminate in 30 minutes.  
-
+---
 ## ⚠️ Notes & Security
-
+---
 - **xhost +** is used in `entrypoint.sh` to disable X authentication, preventing x11vnc crashes but **reducing security**.  *(looking for a workaround currently)*
 - **Local scaling**: By default, `-resize` is removed from x11vnc (Debian stable ships x11vnc 0.9.16, which doesn’t support it). Use the noVNC menu for local scaling or “Scale to Fit” instead.  
 - **Signature Checks**: We do not verify Tor Browser GPG signatures here. If security is crucial, please add signature verification steps in `tor-browser.install.sh`.  
-
+---
 ## 📜 License
-
+---
 Licensed under the [MIT License](LICENSE) — feel free to copy, modify, and share!  
 
 ---  
-
 **Enjoy safe, ephemeral browsing!** 👾🔐  
-```
