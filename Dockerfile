@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.licenses="MIT"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install base packages + build tools for wayvnc
+# Install required packages
 RUN apt-get update && apt-get install -y \
     git curl wget bash sudo python3 net-tools procps dialog \
     weston xwayland tor supervisor openssl torsocks \
@@ -25,14 +25,26 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Build wayvnc from source
+# Build dependencies: aml, neatvnc, then wayvnc
+RUN git clone https://github.com/any1/aml.git /opt/aml && \
+    cd /opt/aml && \
+    meson setup build && \
+    ninja -C build && \
+    ninja -C build install
+
+RUN git clone https://github.com/any1/neatvnc.git /opt/neatvnc && \
+    cd /opt/neatvnc && \
+    meson setup build && \
+    ninja -C build && \
+    ninja -C build install
+
 RUN git clone https://github.com/any1/wayvnc.git /opt/wayvnc && \
     cd /opt/wayvnc && \
     meson setup build && \
     ninja -C build && \
     ninja -C build install
 
-# noVNC
+# Install noVNC
 RUN mkdir -p /opt/novnc && \
     git clone https://github.com/novnc/noVNC.git /opt/novnc && \
     git clone https://github.com/novnc/websockify /opt/novnc/utils/websockify
