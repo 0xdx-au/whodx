@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  secure-vnc:
+    build: .
+    container_name: whodx_tor_env
+    ports:
+      - "443:443"
+    cap_drop:
+      - ALL
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:./seccomp.json
+      - apparmor:whodx-profile
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run
+      - /secure-data:size=100m
+    environment:
+      - SESSION_TIME=15
+    restart: unless-stopped

@@ -1,0 +1,17 @@
+{
+  "defaultAction": "SCMP_ACT_ERRNO",
+  "archMap": [{ "architecture": "SCMP_ARCH_X86_64", "subArchitectures": [] }],
+  "syscalls": [
+    {
+      "names": [
+        "read", "write", "exit", "exit_group",
+        "brk", "rt_sigaction", "rt_sigprocmask",
+        "sigaltstack", "clone", "execve", "wait4",
+        "open", "close", "fstat", "lseek", "mmap", "mprotect",
+        "munmap", "uname", "getpid", "getppid", "getuid", "getgid",
+        "geteuid", "getegid", "arch_prctl", "set_tid_address"
+      ],
+      "action": "SCMP_ACT_ALLOW"
+    }
+  ]
+}
