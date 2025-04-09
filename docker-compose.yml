@@ -1,9 +1,7 @@
-version: "3.9"
-
 services:
-  secure-vnc:
+  whodx-secure-vnc:
     build: .
-    container_name: whodx_tor_env
+    container_name: whodx_secure_env
     ports:
       - "443:443"
     cap_drop:
@@ -12,8 +10,6 @@ services:
       - SYS_ADMIN
     security_opt:
       - no-new-privileges:true
-      - seccomp:./seccomp.json
-      - apparmor:whodx-profile
     read_only: true
     tmpfs:
       - /tmp
