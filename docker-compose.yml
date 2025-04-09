@@ -1,5 +1,5 @@
 services:
-  whodx-secure-vnc:
+  secure:
     build: .
     container_name: whodx_secure_env
     ports:
