@@ -13,8 +13,26 @@ services:
     read_only: true
     tmpfs:
       - /tmp
-      - /run
-      - /secure-data:size=100m
-    environment:
-      - SESSION_TIME=15
-    restart: unless-stopped
+    security_opt:
+      - seccomp:./tor-proxy/seccomp.json
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    security_opt:
+      - seccomp:./tor-browser-prep/seccomp.json
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    dns_search: ["internal"]
+    security_opt:
+      - seccomp:./browser/seccomp.json
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
