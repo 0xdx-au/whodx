@@ -1,0 +1,25 @@
+# Basic settings
+SocksPort 0.0.0.0:9050
+DNSPort 0.0.0.0:5353
+
+# DNS settings
+AutomapHostsSuffixes .onion,.exit
+AutomapHostsOnResolve 1
+DNSListenAddress 0.0.0.0
+
+# Logging
+Log notice file /var/log/tor/notices.log
+SafeLogging 1
+
+# Directory settings
+DataDirectory /var/lib/tor
+
+# Circuit settings
+NewCircuitPeriod 15
+MaxCircuitDirtiness 15
+NumEntryGuards 8
+
+# General settings
+SafeSocks 1
+TestSocks 0
+WarnUnsafeSocks 1

@@ -1,0 +1,13 @@
+#!/bin/bash
+set -e
+
+mkdir -p /etc/nginx/certs
+if [ ! -f /etc/nginx/certs/self.crt ]; then
+  echo "[+] Generating self-signed certs..."
+  openssl req -x509 -nodes -days 365 \
+    -subj "/C=XX/ST=XX/L=XX/O=SafeBrowser/OU=Container/CN=localhost" \
+    -newkey rsa:2048 \
+    -keyout /etc/nginx/certs/self.key \
+    -out /etc/nginx/certs/self.crt
+  echo "[+] Self-signed certificates created."
+fi
